@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { products } from "../service/products";
+import { products } from "../service/products.service";
 
 const router = Router();
 
@@ -50,7 +50,7 @@ router.post("/", (req: Request, res: Response) => {
   const newproduct = { id: products.length + 1, ...req.body };
   products.push(newproduct);
   res.status(201).json({
-    status: "success",
+    status: "created",
     data: newproduct,
   });
 });
@@ -68,9 +68,8 @@ router.delete("/:id", (req: Request, res: Response) => {
 
   products.splice(productIndex, 1);
 
-  res.status(204).json({
-    status: "success",
-    message: null,
+  res.status(200).json({
+    status: "deleted",
   });
 });
 
@@ -85,20 +84,6 @@ router.put("/:id", (req: Request, res: Response) => {
     });
   }
 
-  const validateFields = ["description", "img", "price", "quantity"];
-  let hasTrue = true;
-  for (let field of validateFields) {
-    if (!Object.keys(req.body).includes(field)) {
-      hasTrue = false;
-    }
-  }
-
-  if (req.body.hasOwnProperty() || !hasTrue) {
-    return res.status(400).json({
-      message: "Insert a valid body!",
-    });
-  }
-
   const { quantity } = req.body;
   if (quantity <= 0) {
     return res.status(400).json({
@@ -106,7 +91,7 @@ router.put("/:id", (req: Request, res: Response) => {
     });
   }
 
-  products[productIndex] = { id: productIndex + 1, ...req.body };
+  products[productIndex] = { ...products[productIndex], ...req.body };
   const productUpdated = products[productIndex];
 
   res.status(200).json({
