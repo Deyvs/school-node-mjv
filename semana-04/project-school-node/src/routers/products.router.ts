@@ -1,9 +1,11 @@
+import { Product } from "./../model/products.model";
 import { Request, Response, Router } from "express";
-import { products } from "../service/products.service";
+import ProductsService from "../service/products.service";
 
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
+  const products = ProductsService.getAllProducts();
   res.status(200).send({
     status: "success",
     length: products.length,
@@ -12,43 +14,23 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 router.get("/:id", (req: Request, res: Response) => {
-  const product = products.find((prod) => prod.id === parseInt(req.params.id));
+  const id: number = parseInt(req.params.id);
+  const product = ProductsService.getById(id);
   if (!product) {
     return res.status(404).json({
       message: "Product not found!",
     });
   }
   res.status(200).json({
-    status: "success",
-    length: products.length,
+    status: 200,
     data: product,
   });
 });
 
 router.post("/", (req: Request, res: Response) => {
-  const validateFields = ["description", "img", "price", "quantity"];
-  let hasTrue = true;
-  for (let field of validateFields) {
-    if (!Object.keys(req.body).includes(field)) {
-      hasTrue = false;
-    }
-  }
-
-  if (req.body.hasOwnProperty() || !hasTrue) {
-    return res.status(400).json({
-      message: "Insert a valid body!",
-    });
-  }
-
-  const { quantity } = req.body;
-  if (quantity <= 0) {
-    return res.status(400).json({
-      message: "Quantity must be great than zero!",
-    });
-  }
-
-  const newproduct = { id: products.length + 1, ...req.body };
-  products.push(newproduct);
+  // const products = ProductsService.getAllProducts();
+  // const product = { id: products.length + 1, ...req.body };
+  const newproduct = ProductsService.createProduct(req.body);
   res.status(201).json({
     status: "created",
     data: newproduct,
@@ -56,17 +38,16 @@ router.post("/", (req: Request, res: Response) => {
 });
 
 router.delete("/:id", (req: Request, res: Response) => {
-  const productIndex = products.findIndex(
-    (prod) => prod.id === parseInt(req.params.id)
-  );
+  const id: number = parseInt(req.params.id);
+  const productIndex = ProductsService.deleteProduct(id);
 
-  if (productIndex === -1) {
-    return res.status(404).json({
-      message: "Product not found!",
-    });
-  }
+  // if (productIndex === -1) {
+  //   return res.status(404).json({
+  //     message: "Product not found!",
+  //   });
+  // }
 
-  products.splice(productIndex, 1);
+  // products.splice(productIndex, 1);
 
   res.status(200).json({
     status: "deleted",
@@ -74,25 +55,27 @@ router.delete("/:id", (req: Request, res: Response) => {
 });
 
 router.put("/:id", (req: Request, res: Response) => {
-  const productIndex = products.findIndex(
-    (prod) => prod.id === parseInt(req.params.id)
-  );
+  const id: number = parseInt(req.params.id);
+  // const productIndex = products.findIndex(
+  //   (prod) => prod.id === parseInt(req.params.id)
+  // );
 
-  if (productIndex === -1) {
-    return res.status(400).json({
-      message: "Product not found!",
-    });
-  }
+  // if (productIndex === -1) {
+  //   return res.status(400).json({
+  //     message: "Product not found!",
+  //   });
+  // }
 
-  const { quantity } = req.body;
-  if (quantity <= 0) {
-    return res.status(400).json({
-      message: "Quantity must be great than zero!",
-    });
-  }
+  // const { quantity } = req.body;
+  // if (quantity <= 0) {
+  //   return res.status(400).json({
+  //     message: "Quantity must be great than zero!",
+  //   });
+  // }
 
-  products[productIndex] = { ...products[productIndex], ...req.body };
-  const productUpdated = products[productIndex];
+  // products[productIndex] = { ...products[productIndex], ...req.body };
+  // const productUpdated = products[productIndex];
+  const productUpdated = ProductsService.updateProduct(id, req.body);
 
   res.status(200).json({
     status: "updated",

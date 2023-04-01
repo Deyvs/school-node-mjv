@@ -37,7 +37,7 @@ const students = [
 router.get("/", (req: Request, res: Response) => {
   const students = StudentsService.getAll();
   res.status(200).send({
-    status: "success",
+    status: 200,
     length: students.length,
     data: students,
   });
@@ -61,7 +61,7 @@ router.post("/", (req: Request, res: Response) => {
   const newStudent = StudentsService.create(req.body);
   res.status(201).json({
     status: "201",
-    messge: "Student create",
+    message: "Student create",
     data: {
       newStudent,
     },
