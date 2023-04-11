@@ -70,15 +70,15 @@ class ProductsService {
     // this.products.splice()=
   }
 
-  updateProduct(id: number, productUpdate: any) {
+  updateProduct(id: number, productUpdate: Partial<Product>) {
     const productIndex = this.products.findIndex((prod) => prod.id === id);
     if (productIndex === -1) {
       throw new Error("Prodcut not found!");
     }
 
-    if (productUpdate.quantity <= 0 || productUpdate.price <= 0) {
-      throw new Error("Quantity and/or Price must be great than zero!");
-    }
+    // if (productUpdate.quantity <= 0 || productUpdate.price <= 0) {
+    //   throw new Error("Quantity and/or Price must be great than zero!");
+    // }
 
     const newProductList = this.products.map((prod) => {
       if (prod.id === id) {
