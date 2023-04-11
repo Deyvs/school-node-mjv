@@ -1,11 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-// export interface Product {
-//   id: number;
-//   description: string;
-//   img: string;
-//   price: number;
-//   quantity: number;
-// }
 
 export const ProductSchema = new Schema({
   description: {
@@ -17,10 +10,12 @@ export const ProductSchema = new Schema({
   price: {
     type: Number,
     required: [true, "Price is a required field!"],
+    min: 0.01,
   },
   quantity: {
     type: Number,
     required: [true, "Quantity is a required field!"],
+    min: 1,
   },
   createdAt: {
     type: Date,

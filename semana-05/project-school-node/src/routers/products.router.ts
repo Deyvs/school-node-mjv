@@ -28,11 +28,18 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-  const newproduct = await ProductService.createProduct(req.body);
-  res.status(201).json({
-    status: "created",
-    data: newproduct,
-  });
+  try {
+    const newproduct = await ProductService.createProduct(req.body);
+    res.status(201).json({
+      status: "created",
+      data: newproduct,
+    });
+  } catch (err: any) {
+    res.status(400).json({
+      status: 400,
+      message: err.message,
+    });
+  }
 });
 
 router.delete("/:id", async (req: Request, res: Response) => {

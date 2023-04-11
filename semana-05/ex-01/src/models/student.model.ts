@@ -1,11 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-// export interface Student {
-//   name: string;
-//   email: string;
-//   document: string;
-//   password: string;
-//   age: number;
-// }
 
 export const studentSchema = new Schema({
   name: {
